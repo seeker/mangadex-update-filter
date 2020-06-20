@@ -2,14 +2,22 @@ export class DomFilter {
     constructor() {}
 
     /**
-     * Return a list of title URLs from the Home page.
-     * @param html of the page to filter for URLs
+     * Returns a list of all latest update elements. This should allow for easy deletion.
+     * @param documentTofilter document from the main page
      */
-    public static filterTitleURLFromHome(documentTofilter: Document): string[] {
-        let titles: NodeListOf<Element> = documentTofilter.querySelectorAll(".manga_title");
-        
+    public static filterLatestTitles(documentTofilter: Document): NodeListOf<Element> {
+        let updates : NodeListOf<Element> = documentTofilter.querySelectorAll("#latest_update div.col-md-6");
+        return updates;
+    }
+
+    public static extractUrlFromTitle(element: Element): string {
+        return element.querySelector(".manga_title").getAttribute("href");
+    }
+
+    public static extractAllUrlsFromTitle(elements: NodeListOf<Element>): string[] {
         let urls : string[] = [];
-        titles.forEach(elem => {urls.push(elem.getAttribute("href"))})
+
+        elements.forEach(element => {urls.push(this.extractUrlFromTitle(element))});
 
         return urls;
     }
