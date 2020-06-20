@@ -12,6 +12,7 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-typescript": "^7.7.7",
     "@types/jest": "^26.0.0",
+    "@types/jsdom": "^16.2.3",
     "babel-jest": "^24.9.0",
     "common-tags": "^1.8.0",
     "jest": "^26.0.1",
