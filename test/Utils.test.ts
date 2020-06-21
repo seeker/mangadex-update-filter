@@ -1,4 +1,4 @@
-import { Utils } from "./Utils";
+import { Utils } from "../src/Utils";
 
 let titleID : string = "1234567";
 let titleName : string = "this-is-a-titles-name";

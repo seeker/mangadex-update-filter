@@ -1,4 +1,4 @@
-import { DomFilter } from "./DomFilter";
+import { DomFilter } from "../src/DomFilter";
 import { JSDOM, DOMWindow } from "jsdom";
 
 
