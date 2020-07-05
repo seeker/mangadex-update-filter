@@ -4,13 +4,12 @@
     "build": "webpack",
     "test": "jest"
   },
-  "dependencies": {
-    "@types/greasemonkey": "^4.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-typescript": "^7.7.7",
+    "@types/greasemonkey": "^4.0.0",
     "@types/jest": "^26.0.0",
     "@types/jsdom": "^16.2.3",
     "babel-jest": "^24.9.0",
