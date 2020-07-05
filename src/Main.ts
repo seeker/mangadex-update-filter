@@ -6,7 +6,7 @@ runScript();
 
 function runScript() {
     let latest = DomFilter.filterLatestTitles(document);
-    let persistence : Persistence = new Persistence("md-uf");
+    let persistence : Persistence = new Persistence("md-uf-");
 
     latest.forEach(
         (value) => {
