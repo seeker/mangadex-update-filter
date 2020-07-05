@@ -1,6 +1,8 @@
 import { Title } from "../src/Title";
 import { DomFilter } from "../src/DomFilter"
-import { JSDOM, DOMWindow } from "jsdom";
+import { JSDOM } from "jsdom";
+import { Persistence } from "../src/Persistence";
+import { mock, instance } from "ts-mockito"
 
 
 const html : string = `
@@ -112,24 +114,22 @@ const html : string = `
             </div>
         </div>
 `
-let titleURLs : string[] = ["/title/27856/winter-moon", "/title/9012/red-storm", "/title/40767/maou-to-ore-no-hangyakuki"];
-
-const titleInLatest : string = "9012";
-const titleInFollowing : string = "13871";
 const jsdom : JSDOM = new JSDOM(html);
 const window = jsdom.window;
-const document = window.document;
-let testDocument : Document;
+const originalDocument = window.document;
+let document : Document;
 let pageElements : NodeListOf<Element>;
 let firstElement : Element;
 let cut : Title;
+let persistenceMock: Persistence;
 
 beforeEach(() => {
-    testDocument = document.cloneNode(true) as Document;
-    pageElements = DomFilter.filterLatestTitles(testDocument);
+    document = originalDocument.cloneNode(true) as Document;
+    pageElements = DomFilter.filterLatestTitles(document);
     firstElement = pageElements[0];
 
-    cut = new Title(firstElement);
+    persistenceMock = mock(Persistence);
+    cut = new Title(firstElement, instance(persistenceMock));
 });
 
 it('Check title id', () => {
