@@ -12,7 +12,7 @@ let driver: WebDriver;
 beforeAll(async () => {
     driver = await new Builder().forBrowser('chrome').build();
     await driver.get('https://mangadex.org/');
-}, 10000);
+}, 60000);
 
 afterAll(() => {
     driver.quit();
