@@ -1,6 +1,15 @@
 import { Utils } from "./Utils";
 import { Persistence } from "./Persistence";
 
+export enum FollowState {
+    notFollowing,
+    reading,
+    planningToRead,
+    dropped,
+    completed,
+    onHold
+}
+
 /**
  * Class for interacting with the title document.
  * The URL is in the from of https://mangadex.org/title/{title-id}/{title-name}
@@ -29,5 +38,47 @@ export class TitleDetails {
         });
 
         followButtonDiv.appendChild(button);
+    }
+
+    public getFollowState(): FollowState {
+        let buttonText: string = this.getFollowButtonText();
+
+        let followState = FollowState.notFollowing;
+
+        switch (buttonText) {
+            case "Follow":
+                followState = FollowState.notFollowing;
+                break;
+
+            case "Reading":
+                followState = FollowState.reading;
+                break;
+
+            case "Plan to read":
+                followState = FollowState.planningToRead;
+                break;
+
+            case "Dropped":
+                followState = FollowState.dropped;
+                break;
+
+            case "Completed":
+                followState = FollowState.completed;
+                break;
+
+            case "On hold":
+                followState = FollowState.onHold;
+                break;
+
+            default:
+                throw new Error("Unknown follow state");       
+        }
+
+        return followState;
+    }
+
+    private getFollowButtonText(): string {
+        let followButtonDiv: Element = this.backingDocument.querySelector("div.btn-group > button > span.d-xl-inline");
+        return followButtonDiv.innerHTML;
     }
 }
