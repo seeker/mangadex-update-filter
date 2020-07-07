@@ -7,20 +7,22 @@ import { TitleDetails } from "./TitleDetails";
 runScript();
 
 function runScript() {
+    let persistence : Persistence = new Persistence("md-uf-");
+
     if(document.URL == "https://mangadex.org/") {
         console.log("On main page");
-        mainPage();
+        mainPage(persistence);
     }
 
     if(document.URL.includes("title")) {
         console.log("On title page: " + Utils.getTitleID(document.URL));
-        new TitleDetails(document);
+        let td = new TitleDetails(document, persistence);
+        td.updateFollowStatus();
     }
 }
 
-function mainPage() {
+function mainPage(persistence: Persistence) {
     let latest = DomFilter.filterLatestTitles(document);
-    let persistence : Persistence = new Persistence("md-uf-");
 
     latest.forEach(
         (value) => {

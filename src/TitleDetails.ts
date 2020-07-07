@@ -17,14 +17,18 @@ export enum FollowState {
  */
 export class TitleDetails {
     private backingDocument;
+    private persistence: Persistence;
+    private titleID: string;
 
-    constructor (document: Document) {
+    constructor (document: Document, persistence: Persistence) {
         this.backingDocument = document;
+        this.persistence = persistence;
+        this.titleID = Utils.getTitleID(this.backingDocument.URL);
+
         this.addHideButton();
     }
 
     public addHideButton() {
-        let ID = Utils.getTitleID(this.backingDocument.URL);
         let followButtonDiv = this.backingDocument.querySelector("div.btn-group");
         let persistence: Persistence = new Persistence("md-uf-");
 
@@ -34,11 +38,17 @@ export class TitleDetails {
         button.setAttribute("id", "hide-button")
 
         button.addEventListener("click", (e: Event) => {
-            persistence.ignoreTitle(ID);
-            console.log("Title with ID " + ID + " hidden");
+            persistence.ignoreTitle(this.titleID);
+            console.log("Title with ID " + this.titleID + " hidden");
         });
 
         followButtonDiv.appendChild(button);
+    }
+
+    public updateFollowStatus() {
+        if(this.getFollowState() !== FollowState.notFollowing && !this.persistence.isIgnored(this.titleID)) {
+            this.persistence.setFollowState(this.titleID, this.getFollowState());
+        }
     }
 
     public getFollowState(): FollowState {
