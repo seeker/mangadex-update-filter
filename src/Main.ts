@@ -2,6 +2,7 @@ import { DomFilter } from "./DomFilter";
 import { Title } from "./Title";
 import { Persistence } from "./Persistence"
 import { Utils } from "./Utils";
+import { TitleDetails } from "./TitleDetails";
 
 runScript();
 
@@ -13,6 +14,7 @@ function runScript() {
 
     if(document.URL.includes("title")) {
         console.log("On title page: " + Utils.getTitleID(document.URL));
+        new TitleDetails(document);
     }
 }
 
