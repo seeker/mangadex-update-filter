@@ -37,12 +37,12 @@ export class Persistence {
     }
 
     public isIgnored(titleId: string): boolean {
-        let vaule = ls.get(this.combinedId(titleId));
+        let vaule = this.getFollowState(titleId);
 
         if (vaule == null) {
             return false;
         } else {
-            return true;
+            return vaule !== FollowState.notFollowing;
         }
     }
 

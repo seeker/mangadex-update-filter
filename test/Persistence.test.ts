@@ -63,3 +63,9 @@ it('can read stored follow state', () => {
 it('Read follow state from ignored entry', () => {
     expect(cut.getFollowState(titleIdIgnored)).toBe(FollowState.ignored);
 });
+
+it('not following follow state does not count as ignored', () => {
+    cut.setFollowState(titleIdNotIgnored, FollowState.notFollowing);
+
+    expect(cut.isIgnored(titleIdNotIgnored)).toBe(false);
+});
