@@ -5,7 +5,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "local-storage": "^2.0.0"
+    "local-storage": "^2.0.0",
+    "localforage": "^1.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
