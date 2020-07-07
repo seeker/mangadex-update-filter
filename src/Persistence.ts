@@ -6,6 +6,10 @@ export class Persistence {
 
     constructor (keyPrefix: string) {
         this.keyPrefix = keyPrefix;
+
+        if(ls.get<Number>(keyPrefix + "version") == undefined) {
+            ls.set<Number>(keyPrefix + "version", this.currentVersion);
+        } 
     }
     
     private combinedId(titleId: string): string {
