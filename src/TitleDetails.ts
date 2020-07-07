@@ -7,7 +7,8 @@ export enum FollowState {
     planningToRead,
     dropped,
     completed,
-    onHold
+    onHold,
+    ignored
 }
 
 /**

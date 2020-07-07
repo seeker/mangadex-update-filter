@@ -1,5 +1,6 @@
 import { Persistence } from "../src/Persistence";
 import { Builder, WebDriver } from "selenium-webdriver"
+import { FollowState } from "../src/TitleDetails";
 
 const testPrefix: string = "md-filter-test"
 
@@ -45,4 +46,20 @@ it('Check that title can be ignored', () => {
     cut.ignoreTitle(titleIdNotIgnored);
     
     expect(cut.isIgnored(titleIdNotIgnored)).toBe(true);
+});
+
+it('Titles with a follow state are ignored', () => {
+    cut.setFollowState(titleIdNotIgnored, FollowState.reading);
+    
+    expect(cut.isIgnored(titleIdNotIgnored)).toBe(true);
+});
+
+it('can read stored follow state', () => {
+    cut.setFollowState(titleIdNotIgnored, FollowState.reading);
+    
+    expect(cut.getFollowState(titleIdNotIgnored)).toBe(FollowState.reading);
+});
+
+it('Read follow state from ignored entry', () => {
+    expect(cut.getFollowState(titleIdIgnored)).toBe(FollowState.ignored);
 });
