@@ -85,6 +85,8 @@ it('follow state is not updated if already present', () => {
 
 it('do not set follow state if not following', () => {
     when(persistenceMock.isIgnored(anyString())).thenReturn(false);
+    persistence = instance(persistenceMock);
+
     cut = new TitleDetails(buildDocument(TitleDetailHTML.notFollowing), persistence);
     cut.updateFollowStatus();
 
