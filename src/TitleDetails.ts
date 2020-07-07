@@ -46,7 +46,7 @@ export class TitleDetails {
     }
 
     public updateFollowStatus() {
-        if(this.getFollowState() !== FollowState.notFollowing && !this.persistence.isIgnored(this.titleID)) {
+        if(this.getFollowState() !== FollowState.notFollowing && (this.persistence.getFollowState(this.titleID) === FollowState.ignored || !this.persistence.isIgnored(this.titleID))) {
             this.persistence.setFollowState(this.titleID, this.getFollowState());
         }
     }

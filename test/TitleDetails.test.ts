@@ -92,3 +92,14 @@ it('do not set follow state if not following', () => {
 
     verify(persistenceMock.setFollowState(anyString(), anyNumber())).never();
 });
+
+it('update state if ignore is stored, but follow status is different', () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(true);
+    when(persistenceMock.getFollowState(anyString())).thenReturn(FollowState.ignored);
+    persistence = instance(persistenceMock);
+
+    cut = new TitleDetails(buildDocument(TitleDetailHTML.reading), persistence);
+    cut.updateFollowStatus();
+
+    verify(persistenceMock.setFollowState(anyString(), FollowState.reading)).once();
+});
