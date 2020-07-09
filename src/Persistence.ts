@@ -31,7 +31,6 @@ export class Persistence {
     }
 
     public isIgnored(titleId: string): Promise<boolean> {
-        console.log("Checking if " + titleId + " is ignored");
         return this.getFollowState(titleId).then((res) =>{
             if (res == null) {
                 return Promise.resolve(false);

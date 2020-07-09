@@ -39,22 +39,18 @@ export class TitleDetails {
 
         button.addEventListener("click", (e: Event) => {
             persistence.ignoreTitle(this.titleID);
-            console.log("Title with ID " + this.titleID + " hidden");
         });
 
         followButtonDiv.appendChild(button);
     }
 
     public async updateFollowStatus() {
-        console.log("Updating follow status for " + this.titleID);
         
         const state = await this.persistence.getFollowState(this.titleID);
         const isIgnored = await this.persistence.isIgnored(this.titleID);
 
-        console.log("Current follow status for " + this.titleID + " is " + state);
         if(this.getFollowState() !== FollowState.notFollowing && (state === FollowState.ignored || !isIgnored)) {
             this.persistence.setFollowState(this.titleID, this.getFollowState());
-            console.log("Follow status for " + this.titleID + " updated.");
         }
     }
 
