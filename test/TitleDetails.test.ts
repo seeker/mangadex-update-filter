@@ -66,40 +66,40 @@ it('on hold state', () => {
     expect(cut.getFollowState()).toBe(FollowState.onHold);
 });
 
-it('follow state is updated', () => {
+it('follow state is updated', async () => {
     cut = new TitleDetails(buildDocument(TitleDetailHTML.onHold), persistence);
-    cut.updateFollowStatus();
+    await cut.updateFollowStatus();
 
     verify(persistenceMock.setFollowState(titleID, FollowState.onHold)).called();
 });
 
-it('follow state is not updated if already present', () => {
-    when(persistenceMock.isIgnored(anyString())).thenReturn(true);
+it('follow state is not updated if already present', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
     persistence = instance(persistenceMock);
 
     cut = new TitleDetails(buildDocument(TitleDetailHTML.onHold), persistence);
-    cut.updateFollowStatus();
+    await cut.updateFollowStatus();
     
     verify(persistenceMock.setFollowState(anyString(), anyNumber())).never();
 });
 
-it('do not set follow state if not following', () => {
-    when(persistenceMock.isIgnored(anyString())).thenReturn(false);
+it('do not set follow state if not following', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(false));
     persistence = instance(persistenceMock);
 
     cut = new TitleDetails(buildDocument(TitleDetailHTML.notFollowing), persistence);
-    cut.updateFollowStatus();
+    await cut.updateFollowStatus();
 
     verify(persistenceMock.setFollowState(anyString(), anyNumber())).never();
 });
 
-it('update state if ignore is stored, but follow status is different', () => {
-    when(persistenceMock.isIgnored(anyString())).thenReturn(true);
-    when(persistenceMock.getFollowState(anyString())).thenReturn(FollowState.ignored);
+it('update state if ignore is stored, but follow status is different', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
+    when(persistenceMock.getFollowState(anyString())).thenReturn(Promise.resolve(FollowState.ignored));
     persistence = instance(persistenceMock);
 
     cut = new TitleDetails(buildDocument(TitleDetailHTML.reading), persistence);
-    cut.updateFollowStatus();
+    await cut.updateFollowStatus();
 
     verify(persistenceMock.setFollowState(anyString(), FollowState.reading)).once();
 });

@@ -19,53 +19,53 @@ afterAll(() => {
     driver.quit();
 });
 
-beforeEach(() => {
+beforeEach( async () => {
     cut = new Persistence(testPrefix);
 
     cut.clearIgnoredTitle(titleIdIgnored);
     cut.clearIgnoredTitle(titleIdNotIgnored);
 
-    cut.ignoreTitle(titleIdIgnored);
+    await cut.ignoreTitle(titleIdIgnored);
 });
 
-it('Check that title is ignored', () => {
-    expect(cut.isIgnored(titleIdIgnored)).toBe(true);
+it('Check that title is ignored', async () => {
+    await expect(cut.isIgnored(titleIdIgnored)).resolves.toBe(true);
 });
 
-it('Check that title is not ignored', () => {
-    expect(cut.isIgnored(titleIdNotIgnored)).toBe(false);
+it('Check that title is not ignored', async () => {
+    await expect(cut.isIgnored(titleIdNotIgnored)).resolves.toBe(false);
 });
 
-it('Check that title ignore can be cleared', () => {
+it('Check that title ignore can be cleared', async () => {
     cut.clearIgnoredTitle(titleIdIgnored);
 
-    expect(cut.isIgnored(titleIdIgnored)).toBe(false);
+    await expect(cut.isIgnored(titleIdIgnored)).resolves.toBe(false);
 });
 
-it('Check that title can be ignored', () => {
+it('Check that title can be ignored', async () => {
     cut.ignoreTitle(titleIdNotIgnored);
     
-    expect(cut.isIgnored(titleIdNotIgnored)).toBe(true);
+    await expect(cut.isIgnored(titleIdNotIgnored)).resolves.toBe(true);
 });
 
-it('Titles with a follow state are ignored', () => {
+it('Titles with a follow state are ignored', async () => {
     cut.setFollowState(titleIdNotIgnored, FollowState.reading);
     
-    expect(cut.isIgnored(titleIdNotIgnored)).toBe(true);
+    await expect(cut.isIgnored(titleIdNotIgnored)).resolves.toBe(true);
 });
 
-it('can read stored follow state', () => {
+it('can read stored follow state', async () => {
     cut.setFollowState(titleIdNotIgnored, FollowState.reading);
     
-    expect(cut.getFollowState(titleIdNotIgnored)).toBe(FollowState.reading);
+    await expect(cut.getFollowState(titleIdNotIgnored)).resolves.toBe(FollowState.reading);
 });
 
-it('Read follow state from ignored entry', () => {
-    expect(cut.getFollowState(titleIdIgnored)).toBe(FollowState.ignored);
+it('Read follow state from ignored entry', async () => {
+    await expect(cut.getFollowState(titleIdIgnored)).resolves.toBe(FollowState.ignored);
 });
 
-it('not following follow state does not count as ignored', () => {
+it('not following follow state does not count as ignored', async () => {
     cut.setFollowState(titleIdNotIgnored, FollowState.notFollowing);
 
-    expect(cut.isIgnored(titleIdNotIgnored)).toBe(false);
+    await expect(cut.isIgnored(titleIdNotIgnored)).resolves.toBe(false);
 });

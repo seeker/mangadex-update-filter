@@ -30,9 +30,11 @@ export class Title {
 
         this.backingElement.appendChild(button);
 
-        if (this.persistence.isIgnored(this.getID())) {
-            this.hideTitle();
-        }
+        this.persistence.isIgnored(this.getID()).then((isIgnored) =>{
+            if(isIgnored) {
+                this.hideTitle();
+            }
+        });
     }
 
     public getID() {

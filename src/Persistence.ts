@@ -1,52 +1,46 @@
-import * as ls from "local-storage";
+import localForage from "localforage";
 import { FollowState } from "./TitleDetails";
 
 export class Persistence {
-    private currentVersion: Number = 1;
-    private keyPrefix: string;
+    private currentVersion: number = 1;
+    private databaseName: string;
 
-    constructor (keyPrefix: string) {
-        this.keyPrefix = keyPrefix;
+    constructor (databaseName: string = "mangadex-update-filter") {
+        this.databaseName = databaseName;
 
-        if(ls.get<Number>(keyPrefix + "version") == undefined) {
-            ls.set<Number>(keyPrefix + "version", this.currentVersion);
-        } 
-    }
-    
-    private combinedId(titleId: string): string {
-        return this.keyPrefix + titleId;
-    }
-
-    public ignoreTitle(titleId: string): void {
-        this.setFollowState(titleId, FollowState.ignored);
+        localForage.config({
+            name: this.databaseName,
+            version: this.currentVersion,
+            storeName: "title-state",
+            description: "Store title follow and ignore state"
+        });
     }
 
-    public setFollowState(titleId: string, state: FollowState) {
-        ls.set<FollowState>(this.combinedId(titleId), state);
+    public async ignoreTitle(titleId: string) {
+        await this.setFollowState(titleId, FollowState.ignored);
     }
 
-    public getFollowState(titleId: string) : FollowState {
-        let state = ls.get<FollowState>(this.combinedId(titleId));
-
-        if(typeof  state === "string" && state == "ignored") {
-            state = FollowState.ignored;
-            this.setFollowState(titleId, state);
-        }
-
-        return state;
+    public async setFollowState(titleId: string, state: FollowState) {
+        await localForage.setItem(titleId, state);
     }
 
-    public isIgnored(titleId: string): boolean {
-        let vaule = this.getFollowState(titleId);
+    public async getFollowState(titleId: string) : Promise<FollowState> {
+        let state = await localForage.getItem<FollowState>(titleId);
 
-        if (vaule == null) {
-            return false;
-        } else {
-            return vaule !== FollowState.notFollowing;
-        }
+        return Promise.resolve(state);
+    }
+
+    public isIgnored(titleId: string): Promise<boolean> {
+        return this.getFollowState(titleId).then((res) =>{
+            if (res == null) {
+                return Promise.resolve(false);
+            } else {
+                return Promise.resolve(res !== FollowState.notFollowing);
+            }
+        }).catch(()=> {return Promise.reject()});
     }
 
     public clearIgnoredTitle(titleId: string): void {
-        ls.remove(this.combinedId(titleId));
+        localForage.removeItem(titleId);
     }
 }

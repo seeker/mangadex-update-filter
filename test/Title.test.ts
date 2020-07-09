@@ -2,7 +2,7 @@ import { Title } from "../src/Title";
 import { DomFilter } from "../src/DomFilter"
 import { JSDOM } from "jsdom";
 import { Persistence } from "../src/Persistence";
-import { mock, instance } from "ts-mockito"
+import { mock, instance, when, anyString } from "ts-mockito"
 
 
 const html : string = `
@@ -128,7 +128,8 @@ beforeEach(() => {
     pageElements = DomFilter.filterLatestTitles(document);
     firstElement = pageElements[0];
 
-    persistenceMock = mock(Persistence);
+	persistenceMock = mock(Persistence);
+	when(persistenceMock.isIgnored(anyString())).thenResolve(false);
     cut = new Title(firstElement, instance(persistenceMock));
 });
 
