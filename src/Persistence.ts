@@ -35,7 +35,7 @@ export class Persistence {
         localForage.setItem(titleId, state);
     }
 
-    public getFollowState(titleId: string) : FollowState {
+    public getFollowState(titleId: string) : Promise<FollowState> {
         let state = ls.get<FollowState>(this.combinedId(titleId));
 
         if(typeof  state === "string" && state == "ignored") {
@@ -43,17 +43,18 @@ export class Persistence {
             this.setFollowState(titleId, state);
         }
 
-        return state;
+        return Promise.resolve(state);
     }
 
-    public isIgnored(titleId: string): boolean {
-        let vaule = this.getFollowState(titleId);
-
-        if (vaule == null) {
-            return false;
-        } else {
-            return vaule !== FollowState.notFollowing;
-        }
+    public isIgnored(titleId: string): Promise<boolean> {
+        console.log("Checking if " + titleId + " is ignored");
+        return this.getFollowState(titleId).then((res) =>{
+            if (res == null) {
+                return Promise.resolve(false);
+            } else {
+                return Promise.resolve(res !== FollowState.notFollowing);
+            }
+        }).catch(()=> {return Promise.reject()});
     }
 
     public clearIgnoredTitle(titleId: string): void {
