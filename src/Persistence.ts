@@ -1,47 +1,31 @@
-import * as ls from "local-storage";
 import localForage from "localforage";
 import { FollowState } from "./TitleDetails";
 
 export class Persistence {
     private currentVersion: number = 1;
-    private keyPrefix: string;
+    private databaseName: string;
 
-    constructor (keyPrefix: string) {
-        this.keyPrefix = keyPrefix;
+    constructor (databaseName: string = "mangadex-update-filter") {
+        this.databaseName = databaseName;
 
-        if(ls.get<Number>(keyPrefix + "version") == undefined) {
-            ls.set<Number>(keyPrefix + "version", this.currentVersion);
-        }
-        
         localForage.config({
-            name: "mangadex-update-filter",
+            name: this.databaseName,
             version: this.currentVersion,
             storeName: "title-state",
             description: "Store title follow and ignore state"
         });
-
-    }
-    
-    private combinedId(titleId: string): string {
-        return this.keyPrefix + titleId;
     }
 
-    public ignoreTitle(titleId: string): void {
-        this.setFollowState(titleId, FollowState.ignored);
+    public async ignoreTitle(titleId: string) {
+        await this.setFollowState(titleId, FollowState.ignored);
     }
 
-    public setFollowState(titleId: string, state: FollowState) {
-        ls.set<FollowState>(this.combinedId(titleId), state);
-        localForage.setItem(titleId, state);
+    public async setFollowState(titleId: string, state: FollowState) {
+        await localForage.setItem(titleId, state);
     }
 
-    public getFollowState(titleId: string) : Promise<FollowState> {
-        let state = ls.get<FollowState>(this.combinedId(titleId));
-
-        if(typeof  state === "string" && state == "ignored") {
-            state = FollowState.ignored;
-            this.setFollowState(titleId, state);
-        }
+    public async getFollowState(titleId: string) : Promise<FollowState> {
+        let state = await localForage.getItem<FollowState>(titleId);
 
         return Promise.resolve(state);
     }
@@ -58,6 +42,6 @@ export class Persistence {
     }
 
     public clearIgnoredTitle(titleId: string): void {
-        ls.remove(this.combinedId(titleId));
+        localForage.removeItem(titleId);
     }
 }

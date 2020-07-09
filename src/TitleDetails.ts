@@ -30,7 +30,7 @@ export class TitleDetails {
 
     public addHideButton() {
         let followButtonDiv = this.backingDocument.querySelector("div.btn-group");
-        let persistence: Persistence = new Persistence("md-uf-");
+        let persistence: Persistence = new Persistence();
 
         let button: Element = this.backingDocument.createElement("input");
         button.setAttribute("type", "button");

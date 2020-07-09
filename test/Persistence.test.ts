@@ -19,13 +19,13 @@ afterAll(() => {
     driver.quit();
 });
 
-beforeEach(() => {
+beforeEach( async () => {
     cut = new Persistence(testPrefix);
 
     cut.clearIgnoredTitle(titleIdIgnored);
     cut.clearIgnoredTitle(titleIdNotIgnored);
 
-    cut.ignoreTitle(titleIdIgnored);
+    await cut.ignoreTitle(titleIdIgnored);
 });
 
 it('Check that title is ignored', async () => {

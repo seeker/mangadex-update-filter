@@ -7,7 +7,7 @@ import { TitleDetails } from "./TitleDetails";
 runScript();
 
 function runScript() {
-    let persistence : Persistence = new Persistence("md-uf-");
+    let persistence : Persistence = new Persistence();
 
     if(document.URL == "https://mangadex.org/") {
         console.log("On main page");
