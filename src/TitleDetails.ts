@@ -57,6 +57,12 @@ export class TitleDetails {
 
         if(state === FollowState.ignored || !isIgnored) {
             this.persistence.setFollowState(this.titleID, pageFollowState);
+            return;
+        }
+
+        if(state !== pageFollowState) {
+            this.persistence.setFollowState(this.titleID, pageFollowState);
+            return;
         }
     }
 

@@ -73,14 +73,26 @@ it('follow state is updated', async () => {
     verify(persistenceMock.setFollowState(titleID, FollowState.onHold)).called();
 });
 
-it('follow state is not updated if already present', async () => {
+it('follow state is not updated if already present and identical', async () => {
     when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
+    when(persistenceMock.getFollowState(anyString())).thenResolve(FollowState.onHold);
     persistence = instance(persistenceMock);
 
     cut = new TitleDetails(buildDocument(TitleDetailHTML.onHold), persistence);
     await cut.updateFollowStatus();
     
     verify(persistenceMock.setFollowState(anyString(), anyNumber())).never();
+});
+
+it('follow state is updated if already present and different', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
+    when(persistenceMock.getFollowState(anyString())).thenResolve(FollowState.reading);
+    persistence = instance(persistenceMock);
+
+    cut = new TitleDetails(buildDocument(TitleDetailHTML.onHold), persistence);
+    await cut.updateFollowStatus();
+    
+    verify(persistenceMock.setFollowState(anyString(), FollowState.onHold)).once();
 });
 
 it('do not set follow state if not following', async () => {
