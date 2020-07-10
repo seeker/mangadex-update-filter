@@ -103,3 +103,24 @@ it('update state if ignore is stored, but follow status is different', async () 
 
     verify(persistenceMock.setFollowState(anyString(), FollowState.reading)).once();
 });
+
+it('clear follow state if not following', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
+    persistence = instance(persistenceMock);
+
+    cut = new TitleDetails(buildDocument(TitleDetailHTML.notFollowing), persistence);
+    await cut.updateFollowStatus();
+
+    verify(persistenceMock.clearIgnoredTitle(anyString())).once();
+});
+
+it('do not clear follow state if not following, but title is ignored', async () => {
+    when(persistenceMock.isIgnored(anyString())).thenReturn(Promise.resolve(true));
+    when(persistenceMock.getFollowState(anyString())).thenResolve(FollowState.ignored);
+    persistence = instance(persistenceMock);
+
+    cut = new TitleDetails(buildDocument(TitleDetailHTML.notFollowing), persistence);
+    await cut.updateFollowStatus();
+
+    verify(persistenceMock.clearIgnoredTitle(anyString())).never();
+});

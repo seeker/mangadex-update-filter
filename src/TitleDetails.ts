@@ -45,12 +45,18 @@ export class TitleDetails {
     }
 
     public async updateFollowStatus() {
-        
+        let pageFollowState: FollowState = this.getFollowState();
+
         const state = await this.persistence.getFollowState(this.titleID);
         const isIgnored = await this.persistence.isIgnored(this.titleID);
 
-        if(this.getFollowState() !== FollowState.notFollowing && (state === FollowState.ignored || !isIgnored)) {
-            this.persistence.setFollowState(this.titleID, this.getFollowState());
+        if(pageFollowState === FollowState.notFollowing && state !== FollowState.ignored) {
+            this.persistence.clearIgnoredTitle(this.titleID);
+            return;
+        }
+
+        if(state === FollowState.ignored || !isIgnored) {
+            this.persistence.setFollowState(this.titleID, pageFollowState);
         }
     }
 
